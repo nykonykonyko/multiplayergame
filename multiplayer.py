@@ -1,4 +1,4 @@
-import pygame, pyautogui
+import pygame, pyautogui, random
 pygame.init()
 WIDTH,HEIGHT = pyautogui.size()
 screen = pygame.display.set_mode((WIDTH,HEIGHT))
@@ -24,7 +24,13 @@ def controlPlayers(rectleft,rectright,keypressed):
         rectright.x += 20
     if keypressed[pygame.K_LEFT] and rectright.x > border.x + border.width: 
         rectright.x -= 20    
-
+    
+    if random.randint(1,100)<5:
+        rectleft.x += random.randint(-100,100) 
+        rectleft.y += random.randint(-100,100)
+        if rectleft.x < 0:
+            rectleft.x = 50
+            
 def main():
     rectleft = pygame.Rect(300,HEIGHT/2,150,200)
     rectright = pygame.Rect(WIDTH-300,HEIGHT/2,150,200)
