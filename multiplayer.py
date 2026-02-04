@@ -13,20 +13,40 @@ def  handlebullets(rectleft,rectright,lance,cero,reishi,rayshi):
         i.x += 10
         if i.x > WIDTH:
             lance.remove(i)
+        if i.colliderect(rectright):
+            lance.remove(i)
+            rayshi -= 1 
+            continue 
         for j in cero:
             if i.colliderect(j):
                 lance.remove(i)
                 cero.remove(j)
                 break 
-        if i.colliderect(rectright):
-            lance.remove(i)
-            rayshi -= 1       
 
-def display(rectleft,rectright):
+    
+
+    for j in cero:
+        j.x -= 10
+        if j.x < 0:
+            cero.remove(j)            
+        if j.colliderect(rectleft):
+            cero.remove(j)
+            reishi -= 1     
+
+def display(rectleft,rectright,lance,cero,reishi,rayshi):
     screen.blit(hueco,(0,0))
     screen.blit(primera,(rectright.x,rectright.y))
     screen.blit(cuatro,(rectleft.x,rectleft.y))
     pygame.draw.rect(screen,"black",border)
+
+    for i in lance:
+      pygame.draw.rect(screen,"green",i)
+    for i in cero:
+        pygame.draw.rect(screen,"cyan",i)  
+      
+
+
+
 
 def controlPlayers(rectleft,rectright,keypressed):
     if rectleft.right > border.left:
@@ -59,21 +79,22 @@ def main():
 
     
     while True:
+        
         for e in pygame.event.get():
 
             if e.type == pygame.QUIT:
                 pygame.quit()
-            if e.time == pygame.KEYDOWN:
+            if e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_SPACE:
-                    r = pygame.Rect(rectright.x+20,rectright.y+40,50,50)
+                    r = pygame.Rect(rectright.x+20,rectright.y+40,50,20)
                     cero.append(r)
 
-        if random.randint(1,50)< 5:
-            r = pygame.Rect(rectleft.x+40,rectleft.y+40,50,50)
+        if random.randint(1,100)< 5  :
+            r = pygame.Rect(rectleft.x+40,rectleft.y+40,50,20)
             lance.append(r)
             
         handlebullets(rectleft,rectright,lance,cero,reishi,rayshi)
-        display(rectleft,rectright)
+        display(rectleft,rectright,lance,cero,reishi,rayshi )
         keypressed = pygame.key.get_pressed()
         controlPlayers(rectleft,rectright,keypressed)
         pygame.display.update()
