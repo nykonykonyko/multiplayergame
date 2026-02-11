@@ -8,6 +8,18 @@ primera = pygame.transform.scale(pygame.image.load("starrk.png"),(150,200))
 cuatro = pygame.transform.scale(pygame.image.load("ulq.webp"),(150,200))
 border = pygame.Rect(WIDTH/2-10,0,20,HEIGHT)
 
+lanceimage = pygame.transform.scale(pygame.image.load("thorn.webp"),(50,50))
+ceroimage = pygame.transform.scale(pygame.image.load("darkk.png"),(50,50))
+lanceimage = pygame.transform.rotate(lanceimage,-45)
+
+titlefont = pygame.font.SysFont("arial",70)
+font = pygame.font.SysFont("arial",35)
+starttext = titlefont.render("Bleach Battleground",True,"orange")
+instructiontext = font.render("You are the character on the right. Fight to survive /n" \
+"Space to shoot",1,"purple")
+
+
+
 def  handlebullets(rectleft,rectright,lance,cero,reishi,rayshi):
     for i in lance:
         i.x += 10
@@ -40,11 +52,13 @@ def display(rectleft,rectright,lance,cero,reishi,rayshi):
     pygame.draw.rect(screen,"black",border)
 
     for i in lance:
-      pygame.draw.rect(screen,"green",i)
+      #pygame.draw.rect(screen,"green",i)
+      screen.blit(lanceimage,(i.x,i.y))
     for i in cero:
-        pygame.draw.rect(screen,"cyan",i)  
+        #pygame.draw.rect(screen,"cyan",i)  
+        screen.blit(ceroimage,(i.x,i.y))
       
-
+    rayshitext = titlefont.render(rayshi)
 
 
 
@@ -90,7 +104,7 @@ def main():
                     cero.append(r)
 
         if random.randint(1,100)< 5  :
-            r = pygame.Rect(rectleft.x+40,rectleft.y+40,50,20)
+            r = pygame.Rect(rectleft.x+40,rectleft.y-20,50,20)
             lance.append(r)
             
         handlebullets(rectleft,rectright,lance,cero,reishi,rayshi)
