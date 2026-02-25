@@ -16,7 +16,7 @@ lanceimage = pygame.transform.rotate(lanceimage,-45)
 titlefont = pygame.font.SysFont("arial",70)
 font = pygame.font.SysFont("arial",35)
 starttext = titlefont.render("Bleach Battleground",True,"orange")
-instructiontext = font.render("You are the character on the right. Fight to survive /n" \
+instructiontext = font.render("You are the character on the right. Fight to survive \n" 
 "Space to shoot",1,"purple")
 gameovertext = titlefont.render("GAME OVER",0,"red")
 rayshi = 10
@@ -50,16 +50,18 @@ def  handlebullets(rectleft,rectright,lance,cero):
             cero.remove(j)            
         if j.colliderect(rectleft):
             cero.remove(j)
+            print(reishi,"bullet")
             reishi -= 1     
 
 def display(rectleft,rectright,lance,cero,winner):
+    print(gamestate)
 
     screen.blit(hueco,(0,0))
     screen.blit(primera,(rectright.x,rectright.y))
     screen.blit(cuatro,(rectleft.x,rectleft.y))
     if gamestate == "start":
         screen.blit(starttext,(WIDTH/2-100,HEIGHT/3))
-        screen.blit(instructiontext,(WIDTH/3,HEIGHT/3))
+        screen.blit(instructiontext,(WIDTH/3,HEIGHT/3+200))
     elif gamestate == "play":       
         pygame.draw.rect(screen,"black",border)
 
@@ -73,12 +75,12 @@ def display(rectleft,rectright,lance,cero,winner):
         rayshitext = titlefont.render(f"Lives:{rayshi}",0,"cyan" )
         reishitext = titlefont.render(f"Lives:{reishi}",0,"purple" )
 
-        screen.blit(rayshitext,(50,50))
-        screen.blit(reishitext,(WIDTH-250,50))
+        screen.blit(rayshitext,(WIDTH-250,50))
+        screen.blit(reishitext,(50,50))
     else:
         screen.blit(gameovertext,(WIDTH/2-50,HEIGHT/2))
         winnertext = titlefont.render(f"{winner} wins the game",0,"purple")
-        screen.blit(winnertext,(WIDTH/3-100,HEIGHT/2+100))
+        screen.blit(winnertext,(WIDTH/3-200,HEIGHT/2+200))
 
 def controlPlayers(rectleft,rectright,keypressed):
     if rectleft.right > border.left:
@@ -97,9 +99,12 @@ def controlPlayers(rectleft,rectright,keypressed):
         rectleft.y += random.randint(-100,100)
         if rectleft.x < 0:
             rectleft.x = 50
-        if rectleft.y > HEIGHT:
-            rectleft.y = 300
-
+        if rectleft.bottom > HEIGHT:
+            rectleft.y = HEIGHT - rectleft.height
+        if rectleft.top < 50:
+            rectleft.y = 50
+        if rectleft.right > border.x:
+            rectleft.x = border.x - rectleft.width    
             
 def main():
     global gamestate, reishi, rayshi
@@ -123,22 +128,24 @@ def main():
                         cero.append(r)
                     else:
                         gamestate = "play"
-                        reishi = 0
-                        rayshi = 0
+                        reishi = 10
+                        rayshi = 10
         if reishi == 0:
             winner = "Primera" 
-        elif rayshi == 0:
+        if rayshi == 0:
             winner = "Cuatro"
         if winner:
             gamestate = "end"    
-                           
+        print(reishi,rayshi,winner)                   
         if random.randint(1,100)< 5 and gamestate == "play" :
             r = pygame.Rect(rectleft.x+40,rectleft.y-20,50,20)
             lance.append(r)
-            
-        handlebullets(rectleft,rectright,lance,cero)
-        display(rectleft,rectright,lance,cero,winner)
-        keypressed = pygame.key.get_pressed()
-        controlPlayers(rectleft,rectright,keypressed)
+
+        display(rectleft,rectright,lance,cero,winner)   
+        if gamestate == "play" :
+            handlebullets(rectleft,rectright,lance,cero)
+        
+            keypressed = pygame.key.get_pressed()
+            controlPlayers(rectleft,rectright,keypressed)
         pygame.display.update()
 main()        
